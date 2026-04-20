@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
+import { RefreshCw } from 'lucide-react'
 import type { JiraTicket } from '@/lib/types'
 
 interface Props {
@@ -13,14 +14,14 @@ const PRIORITY_COLORS: Record<string, string> = {
   Critical: 'var(--red)',
   Highest: 'var(--red)',
   High: '#f59e0b',
-  Medium: 'var(--blue)',
+  Medium: 'var(--color-accent)',
   Low: 'var(--green)',
   Lowest: 'var(--tx2)',
 }
 
 const STATUS_COLORS: Record<string, string> = {
   'To Do': 'var(--tx2)',
-  'In Progress': 'var(--blue)',
+  'In Progress': 'var(--color-accent)',
   'In Review': 'var(--purple)',
   'Done': 'var(--green)',
   'Blocked': 'var(--red)',
@@ -73,13 +74,13 @@ export default function JiraBoard({ projectId, onRiskCountChange }: Props) {
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Progress overview */}
-      <div style={{ padding: '16px 20px 12px', borderBottom: '1px solid var(--bd)', flexShrink: 0 }}>
-        <div style={{ fontSize: 11, color: 'var(--tx2)', fontFamily: 'IBM Plex Mono, monospace', marginBottom: 10 }}>
+      <div style={{ padding: 'var(--space-4) var(--space-5) var(--space-3)', borderBottom: '1px solid var(--color-border-default)', flexShrink: 0 }}>
+        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--tx2)', fontFamily: 'var(--font-mono)', marginBottom: 'var(--space-2-5)' }}>
           PROGRESS · {totalTickets} tickets
         </div>
 
         {totalTickets > 0 ? (
-          <div style={{ display: 'flex', height: 8, borderRadius: 4, overflow: 'hidden', gap: 2 }}>
+          <div style={{ display: 'flex', height: 'var(--space-2)', borderRadius: 'var(--radius-sm)', overflow: 'hidden', gap: 'var(--space-0-5)' }}>
             {stats.map(s => {
               const pct = (s.count / totalTickets) * 100
               if (pct === 0) return null
@@ -90,23 +91,23 @@ export default function JiraBoard({ projectId, onRiskCountChange }: Props) {
                   style={{
                     width: `${pct}%`,
                     background: STATUS_COLORS[s.status] || 'var(--tx2)',
-                    borderRadius: 2,
-                    minWidth: 4,
-                    transition: 'width .3s ease',
+                    borderRadius: 'var(--radius-xs)',
+                    minWidth: 'var(--space-1)',
+                    transition: `width var(--duration-fast) var(--ease-default)`,
                   }}
                 />
               )
             })}
           </div>
         ) : (
-          <div style={{ height: 8, borderRadius: 4, background: 'var(--bg3)' }} />
+          <div style={{ height: 'var(--space-2)', borderRadius: 'var(--radius-sm)', background: 'var(--bg3)' }} />
         )}
 
         {/* Status legend */}
-        <div style={{ display: 'flex', gap: 14, marginTop: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 'var(--space-3-5)', marginTop: 'var(--space-2)', flexWrap: 'wrap' }}>
           {stats.map(s => (
-            <div key={s.status} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--tx1)', fontFamily: 'IBM Plex Mono, monospace' }}>
-              <div style={{ width: 8, height: 8, borderRadius: 2, background: STATUS_COLORS[s.status] || 'var(--tx2)' }} />
+            <div key={s.status} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', fontSize: 'var(--text-xs)', color: 'var(--tx1)', fontFamily: 'var(--font-mono)' }}>
+              <div style={{ width: 'var(--space-2)', height: 'var(--space-2)', borderRadius: 'var(--radius-xs)', background: STATUS_COLORS[s.status] || 'var(--tx2)' }} />
               {s.status} ({s.count})
             </div>
           ))}
@@ -114,16 +115,16 @@ export default function JiraBoard({ projectId, onRiskCountChange }: Props) {
       </div>
 
       {/* Filter bar */}
-      <div style={{ padding: '8px 20px', display: 'flex', gap: 4, borderBottom: '1px solid var(--bd)', flexShrink: 0 }}>
+      <div style={{ padding: 'var(--space-2) var(--space-5)', display: 'flex', gap: 'var(--space-1)', borderBottom: '1px solid var(--color-border-default)', flexShrink: 0 }}>
         {FILTERS.map(f => (
           <button
             key={f.key}
             onClick={() => setFilter(f.key)}
             style={{
-              padding: '3px 10px', borderRadius: 5, fontSize: 11, cursor: 'pointer',
-              fontFamily: 'IBM Plex Mono, monospace', transition: '.15s', border: '1px solid',
+              padding: 'var(--space-0-5) var(--space-2-5)', borderRadius: 'var(--radius-md)', fontSize: 'var(--text-xs)', cursor: 'pointer',
+              fontFamily: 'var(--font-mono)', transition: 'var(--duration-fast) var(--ease-default)', border: '1px solid',
               background: filter === f.key ? 'var(--blue-bg)' : 'transparent',
-              color: filter === f.key ? 'var(--blue)' : 'var(--tx2)',
+              color: filter === f.key ? 'var(--color-accent)' : 'var(--tx2)',
               borderColor: filter === f.key ? 'var(--blue-bd)' : 'transparent',
             }}
           >
@@ -133,18 +134,22 @@ export default function JiraBoard({ projectId, onRiskCountChange }: Props) {
         <div style={{ flex: 1 }} />
         <button
           onClick={fetchData}
-          style={{ padding: '3px 10px', borderRadius: 5, fontSize: 11, cursor: 'pointer', fontFamily: 'IBM Plex Mono, monospace', background: 'transparent', border: '1px solid var(--bd2)', color: 'var(--tx2)' }}
+          style={{
+            padding: 'var(--space-0-5) var(--space-2-5)', borderRadius: 'var(--radius-md)', fontSize: 'var(--text-xs)', cursor: 'pointer',
+            fontFamily: 'var(--font-mono)', background: 'transparent', border: '1px solid var(--color-border-strong)', color: 'var(--tx2)',
+            display: 'flex', alignItems: 'center', gap: 'var(--space-1)', transition: 'var(--duration-fast) var(--ease-default)',
+          }}
         >
-          refresh
+          <RefreshCw size={12} />
         </button>
       </div>
 
       {/* Ticket list */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 12px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-2) var(--space-3)' }}>
         {loading ? (
-          <div style={{ padding: 40, textAlign: 'center', color: 'var(--tx2)', fontSize: 12, fontFamily: 'IBM Plex Mono, monospace' }}>loading...</div>
+          <div style={{ padding: 'var(--space-10)', textAlign: 'center', color: 'var(--tx2)', fontSize: 'var(--text-sm)', fontFamily: 'var(--font-mono)' }}>loading...</div>
         ) : filtered.length === 0 ? (
-          <div style={{ padding: 40, textAlign: 'center', color: 'var(--tx2)', fontSize: 12, fontFamily: 'IBM Plex Mono, monospace' }}>
+          <div style={{ padding: 'var(--space-10)', textAlign: 'center', color: 'var(--tx2)', fontSize: 'var(--text-sm)', fontFamily: 'var(--font-mono)' }}>
             {totalTickets === 0 ? 'no jira tickets synced yet — connect via n8n webhook' : 'no tickets match this filter'}
           </div>
         ) : (
@@ -172,29 +177,29 @@ function TicketCard({ ticket, expanded, onToggle }: { ticket: JiraTicket; expand
       onClick={onToggle}
       style={{
         background: 'var(--bg2)',
-        border: '1px solid var(--bd)',
-        borderLeft: hasRisk ? `3px solid ${RISK_COLORS[ticket.risk_level] || 'var(--bd)'}` : '1px solid var(--bd)',
-        borderRadius: 8,
-        padding: '10px 14px',
-        marginBottom: 6,
+        border: '1px solid var(--color-border-default)',
+        borderLeft: hasRisk ? `3px solid ${RISK_COLORS[ticket.risk_level] || 'var(--color-border-default)'}` : '1px solid var(--color-border-default)',
+        borderRadius: 'var(--radius-lg)',
+        padding: 'var(--space-2-5) var(--space-3-5)',
+        marginBottom: 'var(--space-1-5)',
         cursor: 'pointer',
-        transition: '.15s',
+        transition: 'var(--duration-fast) var(--ease-default)',
       }}
     >
       {/* Header row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-        <span style={{ fontSize: 11, fontFamily: 'IBM Plex Mono, monospace', color: 'var(--blue)', fontWeight: 600 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-1)' }}>
+        <span style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--color-accent)', fontWeight: 600 }}>
           {ticket.jira_key}
         </span>
         <span style={{
-          fontSize: 10, fontFamily: 'IBM Plex Mono, monospace', padding: '1px 6px', borderRadius: 4,
+          fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', padding: 'var(--space-0-5) var(--space-1-5)', borderRadius: 'var(--radius-sm)',
           background: `${STATUS_COLORS[ticket.status] || 'var(--tx2)'}20`,
           color: STATUS_COLORS[ticket.status] || 'var(--tx2)',
         }}>
           {ticket.status}
         </span>
         <span style={{
-          fontSize: 10, fontFamily: 'IBM Plex Mono, monospace', padding: '1px 6px', borderRadius: 4,
+          fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', padding: 'var(--space-0-5) var(--space-1-5)', borderRadius: 'var(--radius-sm)',
           color: PRIORITY_COLORS[ticket.priority] || 'var(--tx2)',
         }}>
           {ticket.priority}
@@ -202,7 +207,7 @@ function TicketCard({ ticket, expanded, onToggle }: { ticket: JiraTicket; expand
         <div style={{ flex: 1 }} />
         {hasRisk && (
           <span style={{
-            fontSize: 10, fontFamily: 'IBM Plex Mono, monospace', padding: '1px 6px', borderRadius: 4,
+            fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', padding: 'var(--space-0-5) var(--space-1-5)', borderRadius: 'var(--radius-sm)',
             background: `${RISK_COLORS[ticket.risk_level]}20`,
             color: RISK_COLORS[ticket.risk_level],
             fontWeight: 600,
@@ -213,12 +218,12 @@ function TicketCard({ ticket, expanded, onToggle }: { ticket: JiraTicket; expand
       </div>
 
       {/* Title */}
-      <div style={{ fontSize: 13, color: 'var(--tx0)', marginBottom: 4, lineHeight: 1.4 }}>
+      <div style={{ fontSize: 'var(--text-sm)', color: 'var(--tx0)', marginBottom: 'var(--space-1)', lineHeight: 1.4 }}>
         {ticket.title}
       </div>
 
       {/* Meta row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 11, color: 'var(--tx2)', fontFamily: 'IBM Plex Mono, monospace' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2-5)', fontSize: 'var(--text-xs)', color: 'var(--tx2)', fontFamily: 'var(--font-mono)' }}>
         {ticket.assignee && <span>{ticket.assignee}</span>}
         {ticket.due_date && (
           <span style={{ color: isOverdue ? 'var(--red)' : 'var(--tx2)' }}>
@@ -226,21 +231,21 @@ function TicketCard({ ticket, expanded, onToggle }: { ticket: JiraTicket; expand
           </span>
         )}
         {labels.length > 0 && labels.map(l => (
-          <span key={l} style={{ padding: '0 4px', background: 'var(--bg3)', borderRadius: 3, fontSize: 10 }}>{l}</span>
+          <span key={l} style={{ padding: '0 var(--space-1)', background: 'var(--bg3)', borderRadius: 'var(--radius-xs)', fontSize: 'var(--text-xs)' }}>{l}</span>
         ))}
       </div>
 
       {/* Expanded details */}
       {expanded && (
-        <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid var(--bd)' }}>
+        <div style={{ marginTop: 'var(--space-2-5)', paddingTop: 'var(--space-2-5)', borderTop: '1px solid var(--color-border-default)' }}>
           {ticket.description && (
-            <div style={{ fontSize: 12, color: 'var(--tx1)', lineHeight: 1.5, marginBottom: 8, whiteSpace: 'pre-wrap' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--tx1)', lineHeight: 1.5, marginBottom: 'var(--space-2)', whiteSpace: 'pre-wrap' }}>
               {ticket.description}
             </div>
           )}
           {hasRisk && ticket.risk_reason && (
             <div style={{
-              fontSize: 11, fontFamily: 'IBM Plex Mono, monospace', padding: '6px 10px', borderRadius: 6,
+              fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', padding: 'var(--space-1-5) var(--space-2-5)', borderRadius: 'var(--radius-md)',
               background: `${RISK_COLORS[ticket.risk_level]}10`,
               color: RISK_COLORS[ticket.risk_level],
               border: `1px solid ${RISK_COLORS[ticket.risk_level]}30`,
@@ -248,7 +253,7 @@ function TicketCard({ ticket, expanded, onToggle }: { ticket: JiraTicket; expand
               AI risk analysis: {ticket.risk_reason}
             </div>
           )}
-          <div style={{ fontSize: 10, color: 'var(--tx2)', fontFamily: 'IBM Plex Mono, monospace', marginTop: 6 }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--tx2)', fontFamily: 'var(--font-mono)', marginTop: 'var(--space-1-5)' }}>
             synced {new Date(ticket.synced_at).toLocaleString()}
           </div>
         </div>

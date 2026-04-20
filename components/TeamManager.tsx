@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
+import { Users, X } from 'lucide-react'
 import type { User, ProjectAssignment, UserRole } from '@/lib/types'
 
 interface Props {
@@ -98,17 +99,17 @@ export default function TeamManager({ projectId }: Props) {
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Header */}
-      <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--bd)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+      <div style={{ padding: 'var(--space-3) var(--space-4)', borderBottom: '1px solid var(--color-border-default)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
         <div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--tx0)' }}>Team Management</div>
-          <div style={{ fontSize: 11, color: 'var(--tx2)', fontFamily: 'IBM Plex Mono, monospace', marginTop: 2 }}>
+          <div style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: 'var(--tx0)' }}>Team Management</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--tx2)', fontFamily: 'var(--font-mono)', marginTop: 'var(--space-0-5)' }}>
             {assignments.length} member{assignments.length !== 1 ? 's' : ''} assigned
           </div>
         </div>
         {!showAdd && (
           <button
             onClick={() => setShowAdd(true)}
-            style={{ padding: '6px 14px', background: 'var(--blue)', border: 'none', borderRadius: 6, fontSize: 12, color: '#fff', cursor: 'pointer', fontFamily: 'IBM Plex Mono, monospace', fontWeight: 500 }}
+            style={{ padding: 'var(--space-1-5) var(--space-3)', background: 'var(--blue)', border: 'none', borderRadius: 'var(--radius-md)', fontSize: 'var(--text-sm)', color: '#fff', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontWeight: 500 }}
           >
             + add member
           </button>
@@ -117,32 +118,32 @@ export default function TeamManager({ projectId }: Props) {
 
       {/* Add member form */}
       {showAdd && (
-        <div style={{ padding: '12px 18px', borderBottom: '1px solid var(--bd)', background: 'var(--bg2)' }}>
+        <div style={{ padding: 'var(--space-3) var(--space-4)', borderBottom: '1px solid var(--color-border-default)', background: 'var(--bg2)' }}>
           {/* Mode toggle */}
-          <div style={{ display: 'flex', gap: 4, marginBottom: 10 }}>
+          <div style={{ display: 'flex', gap: 'var(--space-1)', marginBottom: 'var(--space-2)' }}>
             <button onClick={() => setAddMode('select')} style={{
-              padding: '4px 12px', borderRadius: 5, fontSize: 11, cursor: 'pointer', border: '1px solid',
-              fontFamily: 'IBM Plex Mono, monospace',
+              padding: 'var(--space-1) var(--space-3)', borderRadius: 'var(--radius-md)', fontSize: 'var(--text-xs)', cursor: 'pointer', border: '1px solid',
+              fontFamily: 'var(--font-mono)', transition: 'var(--duration-fast) var(--ease-default)',
               background: addMode === 'select' ? 'var(--blue-bg)' : 'var(--bg3)',
               color: addMode === 'select' ? 'var(--blue)' : 'var(--tx1)',
-              borderColor: addMode === 'select' ? 'var(--blue-bd)' : 'var(--bd)',
+              borderColor: addMode === 'select' ? 'var(--blue-bd)' : 'var(--color-border-default)',
             }}>existing user</button>
             <button onClick={() => setAddMode('create')} style={{
-              padding: '4px 12px', borderRadius: 5, fontSize: 11, cursor: 'pointer', border: '1px solid',
-              fontFamily: 'IBM Plex Mono, monospace',
+              padding: 'var(--space-1) var(--space-3)', borderRadius: 'var(--radius-md)', fontSize: 'var(--text-xs)', cursor: 'pointer', border: '1px solid',
+              fontFamily: 'var(--font-mono)', transition: 'var(--duration-fast) var(--ease-default)',
               background: addMode === 'create' ? 'var(--green-bg)' : 'var(--bg3)',
               color: addMode === 'create' ? 'var(--green)' : 'var(--tx1)',
-              borderColor: addMode === 'create' ? 'var(--green-bd)' : 'var(--bd)',
+              borderColor: addMode === 'create' ? 'var(--green-bd)' : 'var(--color-border-default)',
             }}>+ new employee</button>
           </div>
 
           {addMode === 'select' ? (
             /* Select existing user */
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
               <select
                 value={selectedUserId}
                 onChange={e => setSelectedUserId(e.target.value)}
-                style={{ flex: 1, background: 'var(--bg3)', border: '1px solid var(--bd)', borderRadius: 6, padding: '6px 10px', fontSize: 12, color: 'var(--tx0)', outline: 'none', cursor: 'pointer' }}
+                style={{ flex: 1, background: 'var(--bg3)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: 'var(--space-1-5) var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--tx0)', outline: 'none', cursor: 'pointer' }}
               >
                 <option value="">select employee...</option>
                 {availableUsers.map(u => (
@@ -152,7 +153,7 @@ export default function TeamManager({ projectId }: Props) {
               <select
                 value={selectedRole}
                 onChange={e => setSelectedRole(e.target.value as 'lead' | 'member')}
-                style={{ width: 100, background: 'var(--bg3)', border: '1px solid var(--bd)', borderRadius: 6, padding: '6px 10px', fontSize: 12, color: 'var(--tx0)', outline: 'none', fontFamily: 'IBM Plex Mono, monospace', cursor: 'pointer' }}
+                style={{ width: 100, background: 'var(--bg3)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: 'var(--space-1-5) var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--tx0)', outline: 'none', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}
               >
                 <option value="member">member</option>
                 <option value="lead">lead</option>
@@ -161,42 +162,42 @@ export default function TeamManager({ projectId }: Props) {
           ) : (
             /* Create new user */
             <>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
                 <input
                   autoFocus
                   value={newName}
                   onChange={e => setNewName(e.target.value)}
                   placeholder="Full name"
-                  style={{ flex: 1, minWidth: 140, background: 'var(--bg3)', border: '1px solid var(--bd)', borderRadius: 6, padding: '6px 10px', fontSize: 12, color: 'var(--tx0)', outline: 'none' }}
+                  style={{ flex: 1, minWidth: 140, background: 'var(--bg3)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: 'var(--space-1-5) var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--tx0)', outline: 'none' }}
                 />
                 <input
                   value={newEmail}
                   onChange={e => setNewEmail(e.target.value)}
                   placeholder="email@solidbytes.vn"
-                  style={{ flex: 1, minWidth: 180, background: 'var(--bg3)', border: '1px solid var(--bd)', borderRadius: 6, padding: '6px 10px', fontSize: 12, color: 'var(--tx0)', outline: 'none', fontFamily: 'IBM Plex Mono, monospace' }}
+                  style={{ flex: 1, minWidth: 180, background: 'var(--bg3)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: 'var(--space-1-5) var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--tx0)', outline: 'none', fontFamily: 'var(--font-mono)' }}
                 />
                 <select
                   value={selectedRole}
                   onChange={e => setSelectedRole(e.target.value as 'lead' | 'member')}
-                  style={{ width: 100, background: 'var(--bg3)', border: '1px solid var(--bd)', borderRadius: 6, padding: '6px 10px', fontSize: 12, color: 'var(--tx0)', outline: 'none', fontFamily: 'IBM Plex Mono, monospace', cursor: 'pointer' }}
+                  style={{ width: 100, background: 'var(--bg3)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: 'var(--space-1-5) var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--tx0)', outline: 'none', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}
                 >
                   <option value="member">member</option>
                   <option value="lead">lead</option>
                 </select>
               </div>
-              <div style={{ marginTop: 8 }}>
-                <label style={{ fontSize: 10, color: 'var(--tx2)', fontFamily: 'IBM Plex Mono, monospace', display: 'block', marginBottom: 3 }}>Position</label>
-                <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+              <div style={{ marginTop: 'var(--space-2)' }}>
+                <label style={{ fontSize: 10, color: 'var(--tx2)', fontFamily: 'var(--font-mono)', display: 'block', marginBottom: 'var(--space-0-5)' }}>Position</label>
+                <div style={{ display: 'flex', gap: 'var(--space-1)', flexWrap: 'wrap' }}>
                   {TITLES.map(t => (
                     <button
                       key={t}
                       onClick={() => setNewTitle(newTitle === t ? '' : t)}
                       style={{
-                        padding: '3px 8px', borderRadius: 4, fontSize: 10, cursor: 'pointer', border: '1px solid',
-                        fontFamily: 'IBM Plex Mono, monospace',
+                        padding: 'var(--space-0-5) var(--space-2)', borderRadius: 'var(--radius-sm)', fontSize: 10, cursor: 'pointer', border: '1px solid',
+                        fontFamily: 'var(--font-mono)', transition: 'var(--duration-fast) var(--ease-default)',
                         background: newTitle === t ? 'var(--blue-bg)' : 'var(--bg3)',
                         color: newTitle === t ? 'var(--blue)' : 'var(--tx1)',
-                        borderColor: newTitle === t ? 'var(--blue-bd)' : 'var(--bd)',
+                        borderColor: newTitle === t ? 'var(--blue-bd)' : 'var(--color-border-default)',
                       }}
                     >
                       {t}
@@ -207,13 +208,13 @@ export default function TeamManager({ projectId }: Props) {
             </>
           )}
 
-          <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
+          <div style={{ display: 'flex', gap: 'var(--space-1-5)', marginTop: 'var(--space-2)' }}>
             <button
               onClick={addMode === 'select' ? assign : createAndAssign}
               disabled={loading || (addMode === 'select' ? !selectedUserId : !newName.trim() || !newEmail.trim())}
               style={{
-                padding: '6px 16px', border: 'none', borderRadius: 6, fontSize: 12, color: '#fff', cursor: 'pointer',
-                fontFamily: 'IBM Plex Mono, monospace',
+                padding: 'var(--space-1-5) var(--space-4)', border: 'none', borderRadius: 'var(--radius-md)', fontSize: 'var(--text-sm)', color: '#fff', cursor: 'pointer',
+                fontFamily: 'var(--font-mono)', transition: 'var(--duration-fast) var(--ease-default)',
                 background: addMode === 'select' ? 'var(--blue)' : 'var(--green)',
                 opacity: (addMode === 'select' ? selectedUserId : newName.trim() && newEmail.trim()) ? 1 : 0.5,
               }}
@@ -222,7 +223,7 @@ export default function TeamManager({ projectId }: Props) {
             </button>
             <button
               onClick={resetAdd}
-              style={{ padding: '6px 12px', background: 'transparent', border: '1px solid var(--bd)', borderRadius: 6, fontSize: 12, color: 'var(--tx1)', cursor: 'pointer' }}
+              style={{ padding: 'var(--space-1-5) var(--space-3)', background: 'transparent', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', fontSize: 'var(--text-sm)', color: 'var(--tx1)', cursor: 'pointer' }}
             >
               cancel
             </button>
@@ -231,12 +232,12 @@ export default function TeamManager({ projectId }: Props) {
       )}
 
       {/* Team list */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 12px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-2) var(--space-3)' }}>
         {assignments.length === 0 && !showAdd && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, color: 'var(--tx2)', marginTop: 60 }}>
-            <div style={{ fontSize: 28 }}>👥</div>
-            <span style={{ fontSize: 12, fontFamily: 'IBM Plex Mono, monospace' }}>no members assigned</span>
-            <span style={{ fontSize: 11, color: 'var(--tx2)' }}>click "+ add member" to assign employees</span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-2)', color: 'var(--tx2)', marginTop: 'var(--space-16)' }}>
+            <Users size={28} />
+            <span style={{ fontSize: 'var(--text-sm)', fontFamily: 'var(--font-mono)' }}>no members assigned</span>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--tx2)' }}>click &quot;+ add member&quot; to assign employees</span>
           </div>
         )}
         {assignments.map(a => {
@@ -246,33 +247,32 @@ export default function TeamManager({ projectId }: Props) {
           return (
             <div
               key={a.id}
-              style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: 'var(--bg2)', border: '1px solid var(--bd)', borderRadius: 8, marginBottom: 6 }}
+              style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', padding: 'var(--space-2) var(--space-3)', background: 'var(--bg2)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-1-5)' }}
             >
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: urc.bg, border: `1px solid ${urc.color}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 600, color: urc.color, flexShrink: 0 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-full)', background: urc.bg, border: `1px solid ${urc.color}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-xs)', fontWeight: 600, color: urc.color, flexShrink: 0 }}>
                 {initials(a.user_name || '??')}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--tx0)' }}>{a.user_name}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1-5)' }}>
+                  <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--tx0)' }}>{a.user_name}</span>
                   {user?.title && (
-                    <span style={{ fontSize: 10, fontFamily: 'IBM Plex Mono, monospace', color: 'var(--blue)', background: 'var(--blue-bg)', padding: '1px 6px', borderRadius: 3, border: '1px solid var(--blue-bd)' }}>
+                    <span style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: 'var(--blue)', background: 'var(--blue-bg)', padding: '1px var(--space-1-5)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--blue-bd)' }}>
                       {user.title}
                     </span>
                   )}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--tx2)', fontFamily: 'IBM Plex Mono, monospace' }}>{a.email}</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--tx2)', fontFamily: 'var(--font-mono)' }}>{a.email}</div>
               </div>
-              <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: 10, fontFamily: 'IBM Plex Mono, monospace', fontWeight: 500, background: rc.bg, color: rc.color, border: `1px solid ${rc.bd}` }}>
+              <span style={{ padding: 'var(--space-0-5) var(--space-2)', borderRadius: 'var(--radius-sm)', fontSize: 10, fontFamily: 'var(--font-mono)', fontWeight: 500, background: rc.bg, color: rc.color, border: `1px solid ${rc.bd}` }}>
                 {a.role_in_project}
               </span>
               <button
                 onClick={() => remove(a.user_id)}
-                style={{ background: 'transparent', border: 'none', color: 'var(--tx2)', cursor: 'pointer', fontSize: 13, padding: '2px 4px', transition: '.15s' }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'var(--red)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'var(--tx2)')}
+                className="hover-red"
+                style={{ background: 'transparent', border: 'none', color: 'var(--tx2)', cursor: 'pointer', padding: 'var(--space-0-5) var(--space-1)', transition: 'var(--duration-fast) var(--ease-default)', display: 'inline-flex', alignItems: 'center' }}
                 title="Remove from project"
               >
-                ✕
+                <X size={14} />
               </button>
             </div>
           )

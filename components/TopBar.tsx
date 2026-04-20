@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react'
-import { MessageSquare, Sun, Moon } from 'lucide-react'
+import { MessageSquare, Sun, Moon, Settings } from 'lucide-react'
 import { canAssignPeople } from '@/lib/permissions'
 import type { Project, UserRole } from '@/lib/types'
 import type { TabKey, ViewMode } from './AppShell'
@@ -17,8 +17,8 @@ interface Props {
 }
 
 const ROLE_COLORS: Record<UserRole, string> = {
-  boss: 'var(--color-danger)',
-  lead: 'var(--color-warning)',
+  boss: 'var(--red)',
+  lead: 'var(--amber)',
   employee: 'var(--purple)',
 }
 
@@ -44,147 +44,83 @@ export default function TopBar({ project, activeTab, onTab, pendingCount, riskCo
     ]
     if (project?.slack_workspace) list.push({ key: 'slack', label: 'Slack Feed' })
     if (project?.tool && project.tool !== 'none') list.push({ key: 'tool', label: project.tool })
-    if (canAssignPeople(currentRole)) list.push({ key: 'settings', label: 'Settings' })
     return list
   }, [project?.slack_workspace, project?.tool, currentRole])
 
   return (
-    <div
-      style={{
-        height: 'var(--space-16)',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 var(--space-7)',
-        gap: 'var(--space-4)',
-        background: 'var(--color-bg-primary)',
-        flexShrink: 0,
-      }}
-    >
+    <div style={{
+      height: 64, display: 'flex', alignItems: 'center',
+      padding: '0 var(--space-6)', gap: 'var(--space-4)',
+      background: 'var(--bg1)', flexShrink: 0,
+    }}>
 
       {/* Left: Title */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', flex: 1, minWidth: 0 }}>
         {viewMode !== 'project' ? (
-          <span
-            style={{
-              fontSize: 'var(--text-xl)',
-              fontWeight: 700,
-              fontFamily: 'var(--font-sans)',
-              color: 'var(--color-text-primary)',
-              letterSpacing: '-0.02em',
-            }}
-          >
+          <span style={{
+            fontSize: 'var(--text-xl)', fontWeight: 700,
+            color: 'var(--tx0)', letterSpacing: 'var(--tracking-tight)',
+          }}>
             {viewMode === 'dashboard' ? 'Hello, Steven' : 'User Management'}
           </span>
         ) : (
           <>
-            {project && (
-              <div
-                style={{
-                  width: 'var(--space-2-5)',
-                  height: 'var(--space-2-5)',
-                  borderRadius: 'var(--radius-full)',
-                  background: project.color,
-                  flexShrink: 0,
-                }}
-              />
-            )}
-            <span
-              style={{
-                fontSize: 'var(--text-xl)',
-                fontWeight: 700,
-                fontFamily: 'var(--font-sans)',
-                color: 'var(--color-text-primary)',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                letterSpacing: '-0.02em',
-              }}
-            >
+            {project && <div style={{ width: 10, height: 10, borderRadius: 'var(--radius-full)', background: project.color, flexShrink: 0 }} />}
+            <span style={{
+              fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--tx0)',
+              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              letterSpacing: 'var(--tracking-tight)',
+            }}>
               {project?.name ?? 'Project Brain'}
             </span>
           </>
         )}
-        <span
-          style={{
-            fontSize: 'var(--text-2xs)',
-            padding: 'var(--space-1) var(--space-2-5)',
-            borderRadius: 'var(--radius-lg)',
-            fontWeight: 600,
-            fontFamily: 'var(--font-sans)',
-            letterSpacing: '0.03em',
-            textTransform: 'uppercase',
-            color: ROLE_COLORS[currentRole],
-            background: ROLE_BG[currentRole],
-          }}
-        >
+        <span style={{
+          fontSize: 'var(--text-xs)', padding: 'var(--space-1) var(--space-2)',
+          borderRadius: 'var(--radius-lg)', fontWeight: 600,
+          letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase',
+          color: ROLE_COLORS[currentRole], background: ROLE_BG[currentRole],
+        }}>
           {currentRole}
         </span>
       </div>
 
       {/* Center: Tabs */}
-      <div
-        style={{
-          display: 'flex',
-          gap: 'var(--space-1)',
-          alignItems: 'center',
-          background: 'var(--color-bg-tertiary)',
-          borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-0-5)',
-        }}
-      >
+      <div style={{
+        display: 'flex', gap: 'var(--space-1)', alignItems: 'center',
+        background: 'var(--bg3)', borderRadius: 'var(--radius-lg)', padding: 3,
+      }}>
         {viewMode === 'project' && tabs.map(t => (
           <button
             key={t.key}
             onClick={() => onTab(t.key)}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--space-1-5)',
-              padding: 'var(--space-1-5) var(--space-4-5)',
-              borderRadius: 'var(--radius-md)',
-              fontSize: 'var(--text-sm)',
-              fontWeight: 500,
+              display: 'flex', alignItems: 'center', gap: 'var(--space-1-5)',
+              padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-md)',
+              fontSize: 'var(--text-sm)', fontWeight: 500, cursor: 'pointer', border: 'none',
+              transition: 'all var(--duration-fast) var(--ease-default)',
               fontFamily: 'var(--font-sans)',
-              cursor: 'pointer',
-              border: 'none',
-              transition: 'all .2s ease',
-              background: activeTab === t.key ? 'var(--color-bg-primary)' : 'transparent',
-              color: activeTab === t.key ? 'var(--color-text-primary)' : 'var(--color-text-tertiary)',
-              boxShadow: activeTab === t.key ? 'var(--shadow-card)' : 'none',
+              background: activeTab === t.key ? 'var(--bg1)' : 'transparent',
+              color: activeTab === t.key ? 'var(--tx0)' : 'var(--tx2)',
+              boxShadow: activeTab === t.key ? 'var(--shadow-xs)' : 'none',
             }}
           >
             {t.label}
             {t.key === 'slack' && pendingCount > 0 && (
-              <span
-                style={{
-                  fontSize: 'var(--text-2xs)',
-                  fontWeight: 700,
-                  background: 'var(--color-danger)',
-                  color: '#fff',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '1px var(--space-1-5)',
-                  minWidth: 'var(--space-4-5)',
-                  textAlign: 'center',
-                }}
-              >
-                {pendingCount}
-              </span>
+              <span style={{
+                fontSize: 'var(--text-xs)', fontWeight: 700,
+                background: 'var(--red)', color: '#fff',
+                borderRadius: 'var(--radius-lg)', padding: '1px var(--space-1-5)',
+                minWidth: 18, textAlign: 'center',
+              }}>{pendingCount}</span>
             )}
             {t.key === 'tool' && (riskCount ?? 0) > 0 && (
-              <span
-                style={{
-                  fontSize: 'var(--text-2xs)',
-                  fontWeight: 700,
-                  background: 'var(--color-warning)',
-                  color: '#fff',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '1px var(--space-1-5)',
-                  minWidth: 'var(--space-4-5)',
-                  textAlign: 'center',
-                }}
-              >
-                {riskCount}
-              </span>
+              <span style={{
+                fontSize: 'var(--text-xs)', fontWeight: 700,
+                background: 'var(--amber)', color: '#fff',
+                borderRadius: 'var(--radius-lg)', padding: '1px var(--space-1-5)',
+                minWidth: 18, textAlign: 'center',
+              }}>{riskCount}</span>
             )}
           </button>
         ))}
@@ -193,20 +129,14 @@ export default function TopBar({ project, activeTab, onTab, pendingCount, riskCo
           <button
             onClick={onToggleChat}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--space-1-5)',
-              padding: 'var(--space-1-5) var(--space-4-5)',
-              borderRadius: 'var(--radius-md)',
-              fontSize: 'var(--text-sm)',
-              fontWeight: 500,
+              display: 'flex', alignItems: 'center', gap: 'var(--space-1-5)',
+              padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-md)',
+              fontSize: 'var(--text-sm)', fontWeight: 500, cursor: 'pointer', border: 'none',
+              transition: 'all var(--duration-fast) var(--ease-default)',
               fontFamily: 'var(--font-sans)',
-              cursor: 'pointer',
-              border: 'none',
-              transition: 'all .2s ease',
-              background: chatOpen ? 'var(--color-bg-primary)' : 'transparent',
-              color: chatOpen ? 'var(--color-text-primary)' : 'var(--color-text-tertiary)',
-              boxShadow: chatOpen ? 'var(--shadow-card)' : 'none',
+              background: chatOpen ? 'var(--bg1)' : 'transparent',
+              color: chatOpen ? 'var(--tx0)' : 'var(--tx2)',
+              boxShadow: chatOpen ? 'var(--shadow-xs)' : 'none',
             }}
           >
             <MessageSquare size={14} /> Chat
@@ -214,36 +144,50 @@ export default function TopBar({ project, activeTab, onTab, pendingCount, riskCo
         )}
       </div>
 
-      {/* Right: Theme toggle */}
-      <button
-        className="theme-toggle"
-        onClick={() => {
-          document.documentElement.classList.toggle('dark')
-          const isNowDark = document.documentElement.classList.contains('dark')
-          localStorage.setItem('theme', isNowDark ? 'dark' : 'light')
-          setIsDark(isNowDark)
-        }}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 'var(--space-9-5)',
-          height: 'var(--space-9-5)',
-          borderRadius: 'var(--radius-md)',
-          cursor: 'pointer',
-          border: 'none',
-          transition: 'all .2s ease',
-          background: 'var(--color-bg-tertiary)',
-          color: 'var(--color-text-tertiary)',
-        }}
-        title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      >
-        {isDark ? <Sun size={17} /> : <Moon size={17} />}
-      </button>
+      {/* Right: Actions */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+        {viewMode === 'project' && canAssignPeople(currentRole) && (
+          <button
+            className="theme-toggle"
+            onClick={() => onTab('settings')}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 38, height: 38, borderRadius: 'var(--radius-md)',
+              cursor: 'pointer', border: 'none',
+              transition: 'all var(--duration-fast) var(--ease-default)',
+              background: activeTab === 'settings' ? 'var(--bg2)' : 'var(--bg3)',
+              color: activeTab === 'settings' ? 'var(--tx0)' : 'var(--tx2)',
+            }}
+            title="Project Settings"
+          >
+            <Settings size={17} />
+          </button>
+        )}
+
+        <button
+          className="theme-toggle"
+          onClick={() => {
+            document.documentElement.classList.toggle('dark')
+            const isNowDark = document.documentElement.classList.contains('dark')
+            localStorage.setItem('theme', isNowDark ? 'dark' : 'light')
+            setIsDark(isNowDark)
+          }}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: 38, height: 38, borderRadius: 'var(--radius-md)',
+            cursor: 'pointer', border: 'none',
+            transition: 'all var(--duration-fast) var(--ease-default)',
+            background: 'var(--bg3)', color: 'var(--tx2)',
+          }}
+          title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+        >
+          {isDark ? <Sun size={17} /> : <Moon size={17} />}
+        </button>
+      </div>
 
       <style>{`
         .theme-toggle:hover {
-          color: var(--color-text-primary) !important;
+          color: var(--tx0) !important;
         }
       `}</style>
     </div>

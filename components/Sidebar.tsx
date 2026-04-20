@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react'
 import { useRole } from '@/lib/role-context'
 import { canCreateProject, canDeleteProject, canViewDashboard, canManageUsers } from '@/lib/permissions'
 import CreateProjectModal from './CreateProjectModal'
-import { LayoutDashboard, Users, Plus, Settings, Code, Trash2, FolderKanban, X } from 'lucide-react'
+import ConfirmModal from './ConfirmModal'
+import { LayoutDashboard, Users, Plus, Settings, Code, Trash2, FolderKanban, X, LogOut } from 'lucide-react'
 import type { Project, GithubRepo } from '@/lib/types'
 import type { ViewMode } from './AppShell'
 
@@ -24,7 +25,7 @@ function useHover() {
 }
 
 export default function Sidebar({ projects, activeProjectId, onSelect, onProjectsChange, viewMode, onViewMode }: Props) {
-  const { currentUser, currentRole, users, switchUser } = useRole()
+  const { currentUser, currentRole, logout } = useRole()
   const [showNew, setShowNew] = useState(false)
 
   return (
@@ -119,26 +120,20 @@ export default function Sidebar({ projects, activeProjectId, onSelect, onProject
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--tx0)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}>{currentUser?.name || 'Loading...'}</div>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--tx2)', fontWeight: 500 }}>{currentRole}</div>
           </div>
-        </div>
-        {users.length > 1 && (
-          <select
-            value={currentUser?.id || ''}
-            onChange={e => switchUser(e.target.value)}
+          <button
+            onClick={logout}
+            title="Sign out"
             style={{
-              width: '100%', marginTop: 'var(--space-2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 32, height: 32, borderRadius: 'var(--radius-lg)',
               background: 'var(--bg3)', border: 'none',
-              borderRadius: 'var(--radius-lg)',
-              padding: 'var(--space-1-5) var(--space-2)',
-              fontSize: 'var(--text-xs)', color: 'var(--tx0)',
-              fontFamily: 'var(--font-sans)',
-              outline: 'none', cursor: 'pointer',
+              color: 'var(--tx2)', cursor: 'pointer',
+              transition: 'all var(--duration-fast)',
             }}
           >
-            {users.map(u => (
-              <option key={u.id} value={u.id}>{u.name} ({u.role})</option>
-            ))}
-          </select>
-        )}
+            <LogOut size={15} />
+          </button>
+        </div>
       </div>
 
       {showNew && <CreateProjectModal onClose={() => setShowNew(false)} onCreated={onProjectsChange} />}
@@ -196,49 +191,66 @@ function NavItem({ icon, label, active, onClick, badge }: { icon: React.ReactNod
 
 function SidebarProject({ project, active, onSelect, onDelete, showDelete = true }: { project: Project & { pending_count: number }; active: boolean; onSelect: (id: string) => void; onDelete: () => void; showDelete?: boolean }) {
   const [hover, setHover] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
-  async function del(e: React.MouseEvent) {
+  function del(e: React.MouseEvent) {
     e.stopPropagation()
-    if (!confirm(`Delete ${project.name}?`)) return
+    setShowConfirm(true)
+  }
+
+  async function performDelete() {
+    setDeleting(true)
     await fetch(`/api/projects/${project.id}`, { method: 'DELETE' })
     onDelete()
   }
 
   return (
-    <div
-      onClick={() => onSelect(project.id)}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      style={{
-        display: 'flex', alignItems: 'center', gap: 'var(--space-2)',
-        padding: 'var(--space-2) var(--space-3)',
-        borderRadius: 'var(--radius-lg)',
-        cursor: 'pointer',
-        marginBottom: 'var(--space-0-5)',
-        background: active ? 'var(--bg3)' : hover ? 'var(--bg2)' : 'transparent',
-        transition: `all var(--duration-normal) var(--ease-default)`,
-      }}
-    >
-      <div style={{ width: 8, height: 8, borderRadius: 'var(--radius-full)', background: project.color, flexShrink: 0 }} />
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <span style={{ fontSize: 'var(--text-sm)', fontWeight: active ? 600 : 400, color: active ? 'var(--tx0)' : 'var(--tx1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{project.name}</span>
-      </div>
-      {project.pending_count > 0 && (
-        <span style={{
-          fontSize: 'var(--text-xs)',
-          background: 'var(--red)', color: '#fff',
+    <>
+      {showConfirm && (
+        <ConfirmModal
+          title="Delete Project"
+          message={`Are you sure you want to delete ${project.name}? This action cannot be undone.`}
+          confirmText={deleting ? "Deleting..." : "Delete"}
+          onConfirm={performDelete}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
+      <div
+        onClick={() => onSelect(project.id)}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 'var(--space-2)',
+          padding: 'var(--space-2) var(--space-3)',
           borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-0-5) var(--space-1-5)',
-          fontWeight: 700, minWidth: 20, textAlign: 'center',
-          lineHeight: 'var(--leading-xs)',
-        }}>{project.pending_count}</span>
-      )}
-      {hover && showDelete && (
-        <span onClick={del} style={{ color: 'var(--tx2)', padding: 'var(--space-0-5)', cursor: 'pointer', transition: `var(--duration-fast) var(--ease-default)` }} title="Delete">
-          <Trash2 size={13} />
-        </span>
-      )}
-    </div>
+          cursor: 'pointer',
+          marginBottom: 'var(--space-0-5)',
+          background: active ? 'var(--bg3)' : hover ? 'var(--bg2)' : 'transparent',
+          transition: `all var(--duration-normal) var(--ease-default)`,
+        }}
+      >
+        <div style={{ width: 8, height: 8, borderRadius: 'var(--radius-full)', background: project.color, flexShrink: 0 }} />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <span style={{ fontSize: 'var(--text-sm)', fontWeight: active ? 600 : 400, color: active ? 'var(--tx0)' : 'var(--tx1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{project.name}</span>
+        </div>
+        {project.pending_count > 0 && (
+          <span style={{
+            fontSize: 'var(--text-xs)',
+            background: 'var(--red)', color: '#fff',
+            borderRadius: 'var(--radius-lg)',
+            padding: 'var(--space-0-5) var(--space-1-5)',
+            fontWeight: 700, minWidth: 20, textAlign: 'center',
+            lineHeight: 1,
+          }}>{project.pending_count}</span>
+        )}
+        {hover && showDelete && (
+          <span onClick={del} style={{ color: 'var(--tx2)', padding: 'var(--space-0-5)', cursor: 'pointer', transition: `var(--duration-fast) var(--ease-default)` }} title="Delete">
+            <Trash2 size={13} />
+          </span>
+        )}
+      </div>
+    </>
   )
 }
 

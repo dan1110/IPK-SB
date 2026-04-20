@@ -10,6 +10,7 @@ import JiraBoard from './JiraBoard'
 import ProjectSettings from './ProjectSettings'
 import UserManager from './UserManager'
 import BossDashboard from './BossDashboard'
+import LoginPage from './LoginPage'
 import { useRole } from '@/lib/role-context'
 import { canAssignPeople, canManageUsers } from '@/lib/permissions'
 import type { Project, SlackMessage, GithubRepo } from '@/lib/types'
@@ -18,7 +19,7 @@ export type TabKey = 'knowledge' | 'slack' | 'tool' | 'settings'
 export type ViewMode = 'project' | 'dashboard' | 'users'
 
 export default function AppShell() {
-  const { currentUser, currentRole, loading: roleLoading } = useRole()
+  const { currentUser, currentRole, isLoggedIn, login, loading: roleLoading } = useRole()
   const [projects, setProjects] = useState<(Project & { pending_count: number })[]>([])
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabKey>('knowledge')
@@ -92,6 +93,11 @@ export default function AppShell() {
       window.removeEventListener('mouseup', onMouseUp)
     }
   }, [])
+
+  // Show login page when not logged in
+  if (!isLoggedIn && !roleLoading) {
+    return <LoginPage onLogin={login} />
+  }
 
   return (
     <div style={{ display: 'flex', height: '100vh', background: 'var(--color-bg-base)', overflow: 'hidden', fontFamily: 'var(--font-sans)' }}>

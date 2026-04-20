@@ -32,7 +32,9 @@
   --space-1: 4px;
   --space-1-5: 6px;
   --space-2: 8px;
+  --space-2-5: 10px;
   --space-3: 12px;
+  --space-3-5: 14px;
   --space-4: 16px;
   --space-5: 20px;
   --space-6: 24px;
@@ -42,6 +44,7 @@
   --space-16: 64px;
 
   /* Radius */
+  --radius-xs: 2px;
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
@@ -275,6 +278,16 @@ body {
   color: var(--brand) !important;
   transform: translateX(var(--space-1));
 }
+
+/* Close / remove buttons */
+.close-btn:hover {
+  background: var(--red-bg) !important;
+  color: var(--red) !important;
+}
+
+/* Hover color utilities */
+.hover-red:hover { color: var(--red) !important; }
+.hover-blue:hover { color: var(--blue) !important; }
 
 /* Focus ring */
 input:focus, textarea:focus, select:focus {
