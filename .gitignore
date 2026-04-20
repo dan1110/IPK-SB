@@ -26,7 +26,6 @@ downloads/
 eggs/
 .eggs/
 # Compiled library files (but not source lib directories)
-/lib/
 lib64/
 node_modules/**/lib/
 !apps/**/src/lib/
