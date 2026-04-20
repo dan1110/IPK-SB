@@ -1,0 +1,145 @@
+/*
+ * ProjectKnowledgeWorkspace — Design Tokens
+ * All components reference these variables. Zero hardcoded values.
+ */
+
+/* ─── Fonts ─── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ─── Typography ─── */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 15px;
+  --text-lg: 18px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+
+  --leading-xs: 16px;
+  --leading-sm: 20px;
+  --leading-base: 22px;
+  --leading-md: 24px;
+  --leading-lg: 28px;
+  --leading-xl: 30px;
+  --leading-2xl: 36px;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: -0.01em;
+  --tracking-wide: 0.05em;
+
+  /* ─── Spacing (4px grid) ─── */
+  --space-0: 0px;
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ─── Radius ─── */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* ─── Transitions ─── */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 250ms;
+  --ease-default: ease;
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ═══════════════════════════════════════════
+   LIGHT THEME (default)
+   ═══════════════════════════════════════════ */
+[data-theme="light"] {
+  --color-bg-base: #FAFAFA;
+  --color-bg-raised: #FFFFFF;
+  --color-bg-overlay: #FFFFFF;
+  --color-bg-subtle: #F4F4F5;
+  --color-bg-muted: #E4E4E7;
+  --color-bg-invert: #09090B;
+
+  --color-text-primary: #09090B;
+  --color-text-secondary: #52525B;
+  --color-text-tertiary: #A1A1AA;
+  --color-text-invert: #FAFAFA;
+
+  --color-border-default: #E4E4E7;
+  --color-border-subtle: #F4F4F5;
+  --color-border-strong: #D4D4D8;
+
+  --color-accent: #2563EB;
+  --color-accent-hover: #1D4ED8;
+  --color-accent-subtle: #DBEAFE;
+  --color-accent-text: #FFFFFF;
+
+  --color-success: #16A34A;
+  --color-success-subtle: #DCFCE7;
+  --color-warning: #D97706;
+  --color-warning-subtle: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-subtle: #FEE2E2;
+  --color-info: #0EA5E9;
+  --color-info-subtle: #E0F2FE;
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.1);
+  --shadow-focus: 0 0 0 2px var(--color-accent);
+}
+
+/* ═══════════════════════════════════════════
+   DARK THEME (primary)
+   ═══════════════════════════════════════════ */
+[data-theme="dark"] {
+  --color-bg-base: #0A0A0B;
+  --color-bg-raised: #111113;
+  --color-bg-overlay: #18181B;
+  --color-bg-subtle: #1C1C1F;
+  --color-bg-muted: #27272A;
+  --color-bg-invert: #FAFAFA;
+
+  --color-text-primary: #FAFAFA;
+  --color-text-secondary: #A1A1AA;
+  --color-text-tertiary: #52525B;
+  --color-text-invert: #09090B;
+
+  --color-border-default: #27272A;
+  --color-border-subtle: #1C1C1F;
+  --color-border-strong: #3F3F46;
+
+  --color-accent: #3B82F6;
+  --color-accent-hover: #2563EB;
+  --color-accent-subtle: #1E3A5F;
+  --color-accent-text: #FFFFFF;
+
+  --color-success: #22C55E;
+  --color-success-subtle: #14532D;
+  --color-warning: #F59E0B;
+  --color-warning-subtle: #451A03;
+  --color-danger: #EF4444;
+  --color-danger-subtle: #450A0A;
+  --color-info: #38BDF8;
+  --color-info-subtle: #0C4A6E;
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.6);
+  --shadow-focus: 0 0 0 2px var(--color-accent);
+}

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -m venv /Users/dorisdt/Documents/SB/IPK/IPK/.venv)",
+      "Bash(/Users/dorisdt/Documents/SB/IPK/IPK/.venv/bin/pip install:*)",
+      "Bash(npx next:*)",
+      "Bash(curl -s -X POST http://localhost:3000/api/seed)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm run:*)",
+      "Bash(node -e ':*)",
+      "Bash(curl -s http://localhost:3000/api/projects)",
+      "Bash(lsof -ti:3000 -ti:3001)",
+      "Bash(xargs kill:*)",
+      "Bash(curl -s -X POST http://localhost:3000/api/upload/video -F 'file=@/dev/null;filename=test.mp4' -F project_id=test)",
+      "Bash(lsof -ti:3000)",
+      "Bash(lsof -ti:3001)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(echo \"EXIT: $?\")"
+    ]
+  }
+}
