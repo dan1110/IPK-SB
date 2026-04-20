@@ -84,6 +84,12 @@ Next.js 14, Python FastAPI, OpenAI embeddings, Pinecone vector DB.
 ## Status
 Phase 2 development — 60% complete.` })
 
+  // ── Integrations — Intentwave ───────────────────────────────────────────────
+  db.integrations.create({ id: uuid(), project_id: intentwave.id, type: 'slack', label: 'Slack', config: JSON.stringify({ workspace_id: 'intentwave', channel_filter: '#general' }), n8n_webhook_url: 'https://n8n.solidbytes.vn/webhook/slack-intentwave' })
+  db.integrations.create({ id: uuid(), project_id: intentwave.id, type: 'jira', label: 'Jira Software', config: JSON.stringify({ base_url: 'intentwave.atlassian.net', project_key: 'INT', api_token: 'secret-token-xxx' }) })
+  db.integrations.create({ id: uuid(), project_id: intentwave.id, type: 'github', label: 'GitHub Repo', config: JSON.stringify({ repo_url: 'github.com/solidbytes/intentwave', access_token: 'ghp_xxx' }) })
+
+
   // ── Meetings — Neopets ──────────────────────────────────────────────────────
   db.meetings.create({ id: uuid(), project_id: neopets.id, title: 'Sprint Planning — Jan 13', date: '2025-01-13', duration_minutes: 72, transcript: 'Full transcript available...', translation: '', summary: 'Reviewed sprint 3 progress. Payment gateway on track for Jan 17. Agreed to move PR review flow to Friday demos. John raised concern about 502 errors on staging — assigned to Quoc for immediate fix. Next sprint focus: user profiles + marketplace scaffold.', action_items: JSON.stringify(['Quoc: fix staging 502 by EOD Jan 14', 'Steven: send updated API docs by Jan 15', 'Sara: finalize user profile spec by Jan 16']), key_decisions: JSON.stringify(['Payment deadline confirmed: Jan 17 (non-negotiable)', 'Stripe chosen over Braintree']), uploaded_by: 'steven' })
 
