@@ -4,7 +4,7 @@ import { writeFile } from 'fs/promises'
 import path from 'path'
 import os from 'os'
 import { v4 as uuid } from 'uuid'
-import { extractAudio, transcribeAudio, cleanup } from '@/lib/transcribe'
+import { extractAudio, transcribeAudio, cleanup, hasAudioStream } from '@/lib/transcribe'
 import { processMeetingNotes, buildContext } from '@/lib/ai'
 import { db } from '@/lib/db'
 
@@ -61,6 +61,14 @@ export async function POST(req: NextRequest) {
     // ── Save to temp ──────────────────────────────────────────────────────────
     videoPath = path.join(os.tmpdir(), `ipk_drive_${uuid()}.${ext}`)
     await writeFile(videoPath, buffer)
+
+    // ── Đảm bảo có audio để transcribe ────────────────────────────────────────
+    if (!hasAudioStream(videoPath)) {
+      return NextResponse.json(
+        { error: 'File không có audio để transcribe. Hãy dùng video/audio có tiếng.' },
+        { status: 400 }
+      )
+    }
 
     // ── Extract audio ─────────────────────────────────────────────────────────
     const isAudio = contentType.startsWith('audio/')

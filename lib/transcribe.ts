@@ -6,16 +6,37 @@ import os from 'os'
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash-lite'
 
+// ── Check if a media file has an audio stream ────────────────────────────────
+// Video-only files (vd screen recording không thu tiếng) không có gì để transcribe.
+// ffprobe trả về danh sách codec_type của các audio stream — rỗng = không có audio.
+export function hasAudioStream(mediaPath: string): boolean {
+  try {
+    const out = execSync(
+      `ffprobe -v error -select_streams a -show_entries stream=codec_type -of csv=p=0 "${mediaPath}"`,
+      { stdio: 'pipe' }
+    ).toString().trim()
+    return out.length > 0
+  } catch {
+    // ffprobe lỗi (file hỏng/không đọc được) → coi như không transcribe được
+    return false
+  }
+}
+
 // ── Extract audio from video using ffmpeg ─────────────────────────────────────
 export async function extractAudio(videoPath: string): Promise<string> {
   const tmpDir = os.tmpdir()
   const audioPath = path.join(tmpDir, `ipk_audio_${Date.now()}.wav`)
 
   // Convert to WAV mono 16kHz — optimal for transcription
-  execSync(
-    `ffmpeg -i "${videoPath}" -ac 1 -ar 16000 -f wav "${audioPath}" -y`,
-    { stdio: 'pipe' }
-  )
+  try {
+    execSync(
+      `ffmpeg -i "${videoPath}" -ac 1 -ar 16000 -f wav "${audioPath}" -y`,
+      { stdio: 'pipe' }
+    )
+  } catch {
+    // Không đổ stderr ffmpeg thô ra ngoài — ném message gọn
+    throw new Error('Không tách được audio từ video (file có thể không có audio hoặc bị hỏng)')
+  }
 
   return audioPath
 }
