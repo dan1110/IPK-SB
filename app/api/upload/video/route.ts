@@ -4,7 +4,7 @@ import { existsSync, mkdirSync } from 'fs'
 import path from 'path'
 import os from 'os'
 import { v4 as uuid } from 'uuid'
-import { extractAudio, transcribeAudio, cleanup } from '@/lib/transcribe'
+import { extractAudio, transcribeAudio, cleanup, hasAudioStream } from '@/lib/transcribe'
 import { processMeetingNotes, buildContext } from '@/lib/ai'
 import { db } from '@/lib/db'
 
@@ -51,6 +51,14 @@ export async function POST(req: NextRequest) {
     videoPath = path.join(tmpDir, `ipk_video_${uuid()}.${ext}`)
     const bytes = await file.arrayBuffer()
     await writeFile(videoPath, Buffer.from(bytes))
+
+    // ── Step 1.5: Đảm bảo có audio để transcribe ──────────────────────────────
+    if (!hasAudioStream(videoPath)) {
+      return NextResponse.json(
+        { error: 'File không có audio để transcribe. Hãy dùng video/audio có tiếng.' },
+        { status: 400 }
+      )
+    }
 
     // ── Step 2: Extract audio (skip if already audio) ─────────────────────────
     const isAudio = file.type.startsWith('audio/') || file.name.match(/\.(mp3|wav|flac|m4a)$/i)
